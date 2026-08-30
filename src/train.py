@@ -1,3 +1,4 @@
+import os
 import argparse
 import json
 from pathlib import Path
@@ -91,7 +92,7 @@ def parse_args():
 
     parser.add_argument(
         "--config",
-        default="configs/training_config.yaml",
+        default=None,
         help="Path to the training configuration YAML file.",
     )
 
@@ -102,7 +103,13 @@ def main():
 
     args = parse_args()
 
-    config_path = Path(args.config)
+    config_path = Path(
+        args.config
+        or os.environ.get(
+            "TRAINING_CONFIG",
+            "configs/training_config.yaml",
+        )
+    )
 
     if not config_path.exists():
         raise FileNotFoundError(
